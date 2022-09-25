@@ -2,6 +2,7 @@ package guru.springframework.sfgpetclinic.services.springdatajpa;
 
 import guru.springframework.sfgpetclinic.model.Visit;
 import guru.springframework.sfgpetclinic.repositories.VisitRepository;
+import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +15,8 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,11 +33,11 @@ class VisitSDJpaServiceTest {
     void findAll() {
         Set<Visit> visits = Set.of(new Visit(), new Visit());
 
-        when(visitRepository.findAll()).thenReturn(visits);
+        given(visitRepository.findAll()).willReturn(visits);
 
         Set<Visit> visitsFound = service.findAll();
 
-        verify(visitRepository).findAll();
+        then(visitRepository).should().findAll();
         assertThat(visitsFound).isNotEmpty();
         assertThat(visitsFound).hasSize(2);
     }
@@ -43,11 +46,11 @@ class VisitSDJpaServiceTest {
     void findById() {
         Visit visit = new Visit();
 
-        when(visitRepository.findById(anyLong())).thenReturn(Optional.of(visit));
+        given(visitRepository.findById(anyLong())).willReturn(Optional.of(visit));
 
         Visit visitFound = service.findById(1L);
 
-        verify(visitRepository).findById(anyLong());
+        then(visitRepository).should().findById(anyLong());
         assertThat(visitFound).isNotNull();
     }
 
@@ -55,11 +58,11 @@ class VisitSDJpaServiceTest {
     void save() {
         Visit visit = new Visit();
 
-        when(visitRepository.save(any(Visit.class))).thenReturn(visit);
+        given(visitRepository.save(any(Visit.class))).willReturn(visit);
 
         Visit visitSaved = service.save(visit);
 
-        verify(visitRepository).save(any(Visit.class));
+        then(visitRepository).should().save(any(Visit.class));
         assertThat(visitSaved).isNotNull();
     }
 
@@ -69,7 +72,7 @@ class VisitSDJpaServiceTest {
 
         service.delete(visit);
 
-        verify(visitRepository).delete(any(Visit.class));
+        then(visitRepository).should().delete(any(Visit.class));
     }
 
     @Test
@@ -77,5 +80,6 @@ class VisitSDJpaServiceTest {
         service.deleteById(1L);
 
         verify(visitRepository).deleteById(anyLong());
+        then(visitRepository).should().deleteById(anyLong());
     }
 }
