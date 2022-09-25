@@ -4,6 +4,7 @@ import guru.springframework.sfgpetclinic.model.Speciality;
 import guru.springframework.sfgpetclinic.repositories.SpecialtyRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,6 +45,18 @@ class SpecialitySDJpaServiceTest {
         Speciality foundSpecialty = service.findById(1L);
 
         assertThat(foundSpecialty).isNotNull();
+        verify(specialtyRepository).findById(anyLong());
+    }
+
+    @Test
+    void findByIdBDD() {
+        Speciality speciality = new Speciality();
+
+        given(specialtyRepository.findById(anyLong())).willReturn(Optional.of(speciality));
+
+        Speciality foundSpeciality = service.findById(1L);
+
+        assertThat(foundSpeciality).isNotNull();
         verify(specialtyRepository).findById(anyLong());
     }
 
