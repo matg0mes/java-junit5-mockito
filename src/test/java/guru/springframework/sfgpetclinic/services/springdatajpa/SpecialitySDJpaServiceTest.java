@@ -139,6 +139,5 @@ class SpecialitySDJpaServiceTest {
 
         // then
         assertThat(returnedSpeciality.getId()).isEqualTo(1L);
-
     }
 }
