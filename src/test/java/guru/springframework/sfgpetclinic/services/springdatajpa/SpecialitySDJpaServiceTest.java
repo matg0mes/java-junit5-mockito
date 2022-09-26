@@ -14,8 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -103,4 +102,23 @@ class SpecialitySDJpaServiceTest {
         then(specialtyRepository).should(never()).deleteById(5L);
     }
 
+    @Test
+    void testDoThrow() {
+        // when
+        willThrow(new RuntimeException("boom")).given(specialtyRepository).delete(any());
+
+        // then
+        assertThrows(RuntimeException.class, () -> specialtyRepository.delete(new Speciality()));
+        then(specialtyRepository).should(times(1)).delete(any());
+    }
+
+    @Test
+    void testFindByIdThrows() {
+        // when
+        given(specialtyRepository.findById(anyLong())).willThrow(new RuntimeException("boom"));
+
+        // then
+        assertThrows(RuntimeException.class, () -> service.findById(1L));
+        then(specialtyRepository).should(times(1)).findById(1L);
+    }
 }
