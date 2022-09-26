@@ -121,4 +121,24 @@ class SpecialitySDJpaServiceTest {
         assertThrows(RuntimeException.class, () -> service.findById(1L));
         then(specialtyRepository).should(times(1)).findById(1L);
     }
+
+    @Test
+    void testSaveLambda() {
+        //given
+        final String MATCH_ME = "MATCH_ME";
+        Speciality speciality = new Speciality();
+        speciality.setDescription("MATCH_ME");
+
+        Speciality savedSpeciality = new Speciality();
+        savedSpeciality.setId(1L);
+
+        given(specialtyRepository.save(argThat(argument -> argument.getDescription().equals(MATCH_ME)))).willReturn(savedSpeciality);
+
+        // when
+        Speciality returnedSpeciality = service.save(speciality);
+
+        // then
+        assertThat(returnedSpeciality.getId()).isEqualTo(1L);
+
+    }
 }
